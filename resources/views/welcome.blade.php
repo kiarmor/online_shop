@@ -80,6 +80,26 @@
                 <div class="top-right links">
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
+
+                        @if(Auth::user()->getAdmin())
+                            <a href="{{url('/admin/index')}}">Admin</a>
+
+                         @elseif(Auth::user()->getUser())
+                            <a href="{{url('/user/index')}}">User</a>
+                        @endif
+
+
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+
+
                     @else
                         <a href="{{ route('login') }}">Login</a>
 
