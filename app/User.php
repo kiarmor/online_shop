@@ -40,16 +40,18 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'users');
+        return $this->belongsToMany(Role::class, 'user_roles');
     }
 
     public function getAdmin()
     {
-        return $this->roles()->where('name', 'admin');
+        return $this->roles()->where('name', 'admin')->exists();
+
+
     }
 
     public function getUser()
     {
-     return $this->roles()->where('name', 'user');
+     return $this->roles()->where('name', 'user')->exists();
     }
 }
