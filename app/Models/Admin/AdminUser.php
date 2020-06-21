@@ -1,15 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models\Admin;
 
-use App\Models\Role;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class AdminUser extends Model
 {
-    use Notifiable;
+use Notifiable;
+use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'login',
     ];
 
     /**
@@ -40,18 +40,6 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'user_roles');
-    }
-
-    public function getAdmin()
-    {
-        return $this->roles()->where('name', 'admin')->exists();
-
-
-    }
-
-    public function getUser()
-    {
-     return $this->roles()->where('name', 'user')->exists();
+        return $this->belongsToMany('App\Models\Role', 'user_roles');
     }
 }

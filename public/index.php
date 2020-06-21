@@ -58,3 +58,7 @@ $response = $kernel->handle(
 $response->send();
 
 $kernel->terminate($request, $response);
+
+require_once __DIR__ . '/../config/init.php';
+require_once  __DIR__ . '/../config/config.php';
+new App\Shop\Core\ShopApp();

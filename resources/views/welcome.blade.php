@@ -12,7 +12,11 @@
         <!-- Styles -->
         <style>
             html, body {
-                background-color: #fff;
+                background-image: url("{{asset('images/main.jpg')}}");
+                -moz-background-size: 100%, 100%;
+                -webkit-background-size: 100%, 100%;
+                -o-background-size: 100%, 100%;
+                background-size: 100%, 100%;
                 color: #636b6f;
                 font-family: 'Nunito', sans-serif;
                 font-weight: 200;
@@ -49,7 +53,7 @@
             }
 
             .links > a {
-                color: #636b6f;
+                color: black;
                 padding: 0 25px;
                 font-size: 13px;
                 font-weight: 600;
@@ -61,6 +65,13 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            a {
+                color: darkblue;
+                padding: 5px;
+                margin-right: 40px;
+                border: 2px solid darkblue;
+            }
         </style>
     </head>
     <body>
@@ -69,6 +80,26 @@
                 <div class="top-right links">
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
+
+                        @if(Auth::user()->getAdmin())
+                            <a href="{{url('/admin/index')}}">Admin</a>
+
+                         @elseif(Auth::user()->getUser())
+                            <a href="{{url('/user/index')}}">User</a>
+                        @endif
+
+
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                               onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                {{ __('Logout') }}
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+
+
                     @else
                         <a href="{{ route('login') }}">Login</a>
 
@@ -81,19 +112,13 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Laravel 1
+
+                    @php
+
+                    @endphp
                 </div>
 
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
             </div>
         </div>
     </body>
