@@ -38,3 +38,5 @@ Route::group(['middleware' => ['status', 'auth']], function () {
     });
 
 });
+
+Route::get('user/index', 'ShopController\User\MainUserController@index');
