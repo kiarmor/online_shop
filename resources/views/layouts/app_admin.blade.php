@@ -177,7 +177,7 @@
 
             <form action="" method="get" autocomplete="off"  style="position: absolute;">
                 <div class="input-group">
-                    <input id="search" name="search" type="text" class="form-control" placeholder="Живой поиск...." style="color: whitesmoke; background-color:#20262a; border: none;">
+                    <input id="search" name="search" type="text" class="form-control" placeholder="поиск...." style="color: whitesmoke; background-color:#20262a; border: none;">
                     <span class="input-group-btn">
                         <button type="submit" value="" class="btn btn-flat" style="background-color: #ebeff4;"><i class="fa fa-search"></i></button>
                     </span>

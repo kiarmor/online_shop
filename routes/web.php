@@ -33,7 +33,7 @@ Route::group(['middleware' => ['status', 'auth']], function () {
     ];
 
     Route::group($groupData, function (){
-        Route::resource('index', 'MainController')
+        Route::resource('index', 'MainAdminController')
             ->names('shop.admin.index');
     });
 
