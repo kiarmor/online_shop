@@ -6,7 +6,7 @@
         @component('shop.admin.components.breadcrumb')
             @slot('title') Control panel @endslot
             @slot('parent') Main @endslot
-            @slot('active') Active @endslot
+            @slot('active')  @endslot
         @endcomponent
     </section>
 
