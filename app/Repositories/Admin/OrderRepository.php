@@ -35,6 +35,30 @@ class OrderRepository extends CoreRepository
             ->groupBy('orders.id')
             ->orderBy('orders.status')
             ->orderBy('orders.id')
+            ->toBase()
             ->paginate($perpage);
+    }
+
+    public function getOneOrder($order_id)
+    {
+        return $this->startConditions()->withTrashed()
+            ->join('users', 'orders.user_id', '=', 'users.id')
+            ->join('order_products', 'order_products.order_id', '=', 'orders.id')
+            ->select('orders.*', 'users.name',
+                DB::raw('ROUND(SUM(order_products.price), 2) AS sum'))
+            ->where('orders.id', $order_id)
+            ->groupBy('orders.id')
+            ->orderBy('orders.status')
+            ->orderBy('orders.id')
+            ->limit(1)
+            ->first();
+    }
+
+    public function getAllOrderProductsId($order_id)
+    {
+        return DB::table('order_products')
+            ->where('order_id', $order_id)
+            ->get();
+
     }
 }

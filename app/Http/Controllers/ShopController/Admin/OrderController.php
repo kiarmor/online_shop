@@ -24,11 +24,11 @@ class OrderController extends AdminBaseController
      */
     public function index()
     {
-        $perpage = 5;
-
         MetaTag::setTags(['title' => 'Orders list']);
+
+        $perpage = 5;
         $count_orders = MainAdminRepository::getCountOrders();
-        $orders = $this->order_repository->getAllOrders(15);
+        $orders = $this->order_repository->getAllOrders(7);
 
         return view('shop.admin.order.order', compact('count_orders', 'orders'));
 
@@ -74,7 +74,13 @@ class OrderController extends AdminBaseController
      */
     public function edit($id)
     {
-        //
+        $item = $this->order_repository->getId($id);
+        MetaTag::setTags(['title' => "Order № {$item->id}"]);
+        $order = $this->order_repository->getOneOrder($item->id);
+        $order_products = $this->order_repository->getAllOrderProductsId($item->id);
+
+        return view('shop.admin.order.edit', compact('item', 'order', 'order_products'));
+
     }
 
     /**

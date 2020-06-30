@@ -42,7 +42,10 @@
                                     <td>{{$order->sum}} {{$order->currency}}</td>
                                     <td>{{$order->created_at}}</td>
                                     <td>{{$order->updated_at}}</td>
-                                    <td><a href=""><i class="fa fa-fw fa-eye"></i></a></td>
+                                    <td>
+                                        <a href="{{route('shop/admin.orders.edit', $order->id)}}" title="edit order"><i class="fa fa-fw fa-eye"></i></a>
+                                        <a href="{{route('shop/admin.orders.destroy', $order->id)}}" title="delete order"><i class="fa fa-fw fa-close text-danger delete BD"></i></a>
+                                    </td>
                                 </tr>
                                     @empty
                                     <tr>
@@ -53,7 +56,20 @@
                             </table>
                         </div>
                         <div class="text-center">
-                            <p>{{$count_orders}} order('s)</p>
+                            <p>{{count($orders)}} order('s) from {{$count_orders}}</p>
+                            @if($orders->total() >  $orders->count())
+                                <br>
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                {{$orders->links()}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
