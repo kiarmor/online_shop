@@ -43,8 +43,8 @@
                                     <td>{{$order->created_at}}</td>
                                     <td>{{$order->updated_at}}</td>
                                     <td>
-                                        <a href="{{route('shop/admin.orders.edit', $order->id)}}" title="edit order"><i class="fa fa-fw fa-eye"></i></a>
-                                        <a href="{{route('shop/admin.orders.destroy', $order->id)}}" title="delete order"><i class="fa fa-fw fa-close text-danger delete BD"></i></a>
+                                        <a href="{{route('shop.admin.orders.edit', $order->id)}}" title="edit order"><i class="fa fa-fw fa-eye"></i></a>
+                                        <a href="{{route('shop.admin.orders.destroy', $order->id)}}" title="delete order"><i class="fa fa-fw fa-close text-danger delete BD"></i></a>
                                     </td>
                                 </tr>
                                     @empty

@@ -6,10 +6,10 @@
         <h1>
             Edit order № {{$item->id}}
             @if(!$order->status)
-                <a href="/?status=1" class="btn btn-success btn-xs">Accept</a>
+                <a href="{{route('shop.admin.orders.change', $item->id)}}/?status=1" class="btn btn-success btn-xs">Accept</a>
                 <a href="#" class="btn btn-warning btn-xs redact">Edit</a>
             @else
-                <a href="/?status=0" class="btn btn-default btn-xs">Return</a>
+                <a href="{{route('shop.admin.orders.change', $item->id)}}/?status=0" class="btn btn-default btn-xs">Return</a>
             @endif
             <a class="btn btn-xs" href="">
                 <form id="delform" method="post" action="" style="float: none">
@@ -34,7 +34,7 @@
                 <div class="box">
                     <div class="box-body">
                         <div class="table-responsive">
-                            <form action="" method="post">
+                            <form action="{{route('shop.admin.orders.save', $item->id)}}" method="post">
                                 @csrf
 
                                 <table class="table table-bordered table-hover">

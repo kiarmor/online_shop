@@ -59,6 +59,18 @@ class OrderRepository extends CoreRepository
         return DB::table('order_products')
             ->where('order_id', $order_id)
             ->get();
+    }
 
+    public function changeStatusOrder($id)
+    {
+        $item = $this->getId($id);
+       /* if (!$item){
+            abort(404);
+        }*/
+        //$item->status = $_GET['status'] == 1 ?? 0;//20:25
+        //dd($item->status);
+        $item->status = !empty($_GET['status']) ? '1' : '0';
+        $result = $item->update();
+        return $result;
     }
 }

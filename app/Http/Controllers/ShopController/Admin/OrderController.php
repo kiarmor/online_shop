@@ -105,4 +105,22 @@ class OrderController extends AdminBaseController
     {
         //
     }
+
+    public function change($id)
+    {
+        $result = $this->order_repository->changeStatusOrder($id);
+        if ($result){
+            return redirect()->route('shop.admin.orders.edit', $id)
+                ->with(['success' => 'Saved']);
+        }
+        else{
+            return back()
+                ->withErrors(['msg' => 'Cant save']);
+        }
+    }
+
+    public function save($id)
+    {
+
+    }
 }
