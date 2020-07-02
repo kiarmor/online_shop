@@ -6,7 +6,7 @@
         @component('shop.admin.components.breadcrumb')
             @slot('title') Control panel @endslot
             @slot('parent') Main @endslot
-            @slot('active') Active @endslot
+            @slot('active')  @endslot
         @endcomponent
     </section>
 
@@ -24,7 +24,7 @@
                         <div class="icon">
                             <i class="ion ion-bag"></i>
                         </div>
-                        <a href="" class="small-box-footer">More info
+                        <a href="{{route('shop.admin.orders.index')}}" class="small-box-footer">More info
                             <i class="fa fa-arrow-circle-o-right"></i></a>
                 </div>
             </div>
