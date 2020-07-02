@@ -24,8 +24,8 @@
                 <tbody>
                 @foreach($last_orders as $order)
                     <tr>
-                        <td><a href="">{{$order->id}}</a></td>
-                        <td><a href="">{{ucfirst($order->name)}}</a></td>
+                        <td><a href="{{route('shop.admin.orders.edit', $order->id)}}">{{$order->id}}</a></td>
+                        <td><a href="{{route('shop.admin.orders.edit', $order->id)}}">{{ucfirst($order->name)}}</a></td>
                         <td><span class="label label-success">
                                 @if($order->status == 0)New @endif
                                 @if($order->status == 1)Completed @endif
@@ -44,7 +44,7 @@
     <br>
     <!--box body-->
     <div class="box-footer clearfix">
-        <a href="" class="btn btn-sm btn-info btn-flat pull-left">All orders</a>
+        <a href="{{route('shop.admin.orders.index')}}" class="btn btn-sm btn-info btn-flat pull-left">All orders</a>
     </div>
     <!--box footer-->
 </div>

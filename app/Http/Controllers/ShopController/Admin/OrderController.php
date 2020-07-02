@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ShopController\Admin;
 
+use App\Http\Requests\AdminOrderSaveRequest;
 use App\Repositories\Admin\MainAdminRepository;
 use App\Repositories\Admin\OrderRepository;
 use Illuminate\Http\Request;
@@ -24,13 +25,18 @@ class OrderController extends AdminBaseController
      */
     public function index()
     {
-        MetaTag::setTags(['title' => 'Orders list']);
+        try {
+            MetaTag::setTags(['title' => 'Orders list']);
 
-        $perpage = 5;
-        $count_orders = MainAdminRepository::getCountOrders();
-        $orders = $this->order_repository->getAllOrders(7);
+            $perpage = 5;
+            $count_orders = MainAdminRepository::getCountOrders();
+            $orders = $this->order_repository->getAllOrders(7);
 
-        return view('shop.admin.order.order', compact('count_orders', 'orders'));
+            return view('shop.admin.order.order', compact('count_orders', 'orders'));
+        }
+        catch (\Exception $e){
+            return abort(404);
+        }
 
     }
 
@@ -103,12 +109,19 @@ class OrderController extends AdminBaseController
      */
     public function destroy($id)
     {
-        //
+        $result = $this->order_repository->changeStatusOnDelete($id);
+        if ($result){
+            return redirect()
+                ->route('shop.admin.orders.index')
+                ->with(['success' => 'Deleted successfully']);
+        }
+        else return back()
+            ->withErrors(['msg' => 'Cant delete']);
     }
 
-    public function change($id)
+    public function change(Request $request, $id)
     {
-        $result = $this->order_repository->changeStatusOrder($id);
+        $result = $this->order_repository->changeStatusOrder($request, $id);
         if ($result){
             return redirect()->route('shop.admin.orders.edit', $id)
                 ->with(['success' => 'Saved']);
@@ -119,8 +132,29 @@ class OrderController extends AdminBaseController
         }
     }
 
-    public function save($id)
+    public function save(AdminOrderSaveRequest $adminOrderSaveRequest, $id)
     {
+        $result = $this->order_repository->saveOrderComment($adminOrderSaveRequest, $id);
+        if ($result){
+            return redirect()->route('shop.admin.orders.edit', $id)
+                ->with(['success' => 'Saved']);
+        }
+        else{
+            return back()
+                ->withErrors(['msg' => 'Cant save']);
+        }
+    }
 
+    public function forcedestroy($id)
+    {
+        $result = $this->order_repository->deleteFromDataBase($id);
+        if ($result){
+            return redirect()->route('shop.admin.orders.index')
+                ->with(['success' => 'Deleted']);
+        }
+        else{
+            return back()
+                ->withErrors(['msg' => 'Can\'t Delete']);
+        }
     }
 }

@@ -7,12 +7,12 @@
             Edit order № {{$item->id}}
             @if(!$order->status)
                 <a href="{{route('shop.admin.orders.change', $item->id)}}/?status=1" class="btn btn-success btn-xs">Accept</a>
-                <a href="#" class="btn btn-warning btn-xs redact">Edit</a>
+                <a href="#" class="btn btn-warning btn-xs">Edit</a>
             @else
                 <a href="{{route('shop.admin.orders.change', $item->id)}}/?status=0" class="btn btn-default btn-xs">Return</a>
             @endif
             <a class="btn btn-xs" href="">
-                <form id="delform" method="post" action="" style="float: none">
+                <form id="delform" method="post" action="{{route('shop.admin.orders.destroy', $item->id)}}" style="float: none">
                     @method('DELETE')
                     @csrf
                     <button type="submit" class="btn btn-danger btn-xs delete">Delete</button>
@@ -75,7 +75,7 @@
                                     </tr>
                                     <tr>
                                         <td>Comment</td>
-                                        <td><input type="text" value="@if(isset($order->note)){{$order->note}}@endif" placeholder="@if(!isset($order->note)) no comment @endif" name="comment">
+                                        <td><input type="text" value="@if(isset($order->note)){{$order->note}}@endif" placeholder="@if($order->note == null) no comment @endif" name="comment">
                                         </td>
                                     </tr>
                                     </tbody>

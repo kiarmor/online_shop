@@ -8,8 +8,10 @@
 
 namespace App\Repositories\Admin;
 use App\Models\Admin\Order as Model;
-
+use App\Models\Admin\Order;
 use App\Repositories\CoreRepository;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
 class OrderRepository extends CoreRepository
@@ -24,7 +26,7 @@ class OrderRepository extends CoreRepository
         return Model::class;
     }
 
-    public function getAllOrders($perpage)
+    public function getAllOrders($perpage): LengthAwarePaginator
     {
         return $this->startConditions()->withTrashed()
             ->join('users', 'orders.user_id', '=', 'users.id')
@@ -39,7 +41,7 @@ class OrderRepository extends CoreRepository
             ->paginate($perpage);
     }
 
-    public function getOneOrder($order_id)
+    public function getOneOrder($order_id): Order
     {
         return $this->startConditions()->withTrashed()
             ->join('users', 'orders.user_id', '=', 'users.id')
@@ -54,23 +56,44 @@ class OrderRepository extends CoreRepository
             ->first();
     }
 
-    public function getAllOrderProductsId($order_id)
+    public function getAllOrderProductsId($order_id): Collection
     {
         return DB::table('order_products')
             ->where('order_id', $order_id)
             ->get();
     }
 
-    public function changeStatusOrder($id)
+    public function changeStatusOrder($request ,$id): bool
     {
         $item = $this->getId($id);
-       /* if (!$item){
-            abort(404);
-        }*/
-        //$item->status = $_GET['status'] == 1 ?? 0;//20:25
-        //dd($item->status);
-        $item->status = !empty($_GET['status']) ? '1' : '0';
+        $item->status = $request->status;
         $result = $item->update();
         return $result;
+    }
+
+    public function changeStatusOnDelete($id): bool
+    {
+        $item = $this->getId($id);
+        $item->status = '2';
+        $result = $item->update();
+
+        if ($result){
+            Order::destroy($id);
+        }
+        return $result;
+    }
+
+    public function saveOrderComment($request, $id): Order
+    {
+        $item = $this->getId($id);
+        $item->note = $request->comment;
+        $item->update();
+        return $item;
+    }
+
+    public function deleteFromDataBase($id): bool
+    {
+        $item = DB::table('orders')->delete($id);
+        return $item;
     }
 }

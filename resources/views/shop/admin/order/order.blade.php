@@ -25,7 +25,7 @@
                                     <th>Sum</th>
                                     <th>Created at</th>
                                     <th>Changed at</th>
-                                    <th>Actions</th>
+                                    <th>Delete from DB</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -33,7 +33,7 @@
                                     @php $class = $order->status ? 'success' : '' @endphp
                                 <tr class="{{$class}}">
                                     <td>{{$order->id}}</td>
-                                    <td>{{$order->name}}</td>
+                                    <td><a href="{{route('shop.admin.orders.edit', $order->id)}}" title="edit order">{{$order->name}}</a></td>
                                     <td>
                                         @if($order->status == 0) New
                                         @elseif($order->status == 1)<b style="color: green">Completed</b>
@@ -43,8 +43,8 @@
                                     <td>{{$order->created_at}}</td>
                                     <td>{{$order->updated_at}}</td>
                                     <td>
-                                        <a href="{{route('shop.admin.orders.edit', $order->id)}}" title="edit order"><i class="fa fa-fw fa-eye"></i></a>
-                                        <a href="{{route('shop.admin.orders.destroy', $order->id)}}" title="delete order"><i class="fa fa-fw fa-close text-danger delete BD"></i></a>
+                                        {{--<a href="{{route('shop.admin.orders.edit', $order->id)}}" title="edit order"><i class="fa fa-fw fa-eye"></i></a>--}}
+                                        <a href="{{route('shop.admin.orders.forcedestroy', $order->id)}}" title="delete order"><i class="fa fa-fw fa-close text-danger deleteDB"></i></a>
                                     </td>
                                 </tr>
                                     @empty
