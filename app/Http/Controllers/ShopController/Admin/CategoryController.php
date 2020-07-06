@@ -96,4 +96,31 @@ class CategoryController extends AdminBaseController
     {
         //
     }
+
+    public function mydel(Request $request)
+    {
+        try {
+            $id = $request->id;
+        } catch (\Exception $exception){
+            abort(404);
+        }
+
+        $children = $this->categoryRepository->checkChildren($id);
+        if ($children !== 0){
+            return back()->withErrors(['msg' => 'Can\'t delete, some Subcategories in Category']);
+        }
+        $parent = $this->categoryRepository->checkParent($id);
+        if ($parent !== 0){
+            return back()->withErrors(['msg' => 'Can\'t delete, some products in Category']);
+        }
+       $delete = $this->categoryRepository->deleteCategory($id);
+
+        if ($delete){
+            return redirect()
+                ->route('shop.admin.categories.index')
+                ->with(['success' => "Category with id {$id} delete successfully."]);
+        } else {
+            return back()->withErrors(['msg' => 'Delete error.']);
+        }
+    }
 }

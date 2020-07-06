@@ -12,6 +12,7 @@ namespace App\Repositories\Admin;
 use App\Models\Admin\Category;
 use App\Repositories\CoreRepository;
 use App\Models\Admin\Category as Model;
+use Illuminate\Support\Facades\DB;
 use Menu as LavaryMenu;
 
 class CategoryRepository extends CoreRepository
@@ -48,5 +49,32 @@ class CategoryRepository extends CoreRepository
         });
 
         return $menu_builder;
+    }
+
+    public function checkChildren($id)
+    {
+        $childrens = $this->startConditions()
+            ->where('parent_id', $id)
+            ->count();
+
+        return $childrens;
+    }
+
+    public function checkParent($id)
+    {
+        $parents = DB::table('products')
+            ->where('category_id', $id)
+            ->count();
+
+        return $parents;
+    }
+
+    public function deleteCategory($id)
+    {
+        $delete = $this->startConditions()
+            ->find($id)
+            ->forceDelete();
+
+        return $delete;
     }
 }
