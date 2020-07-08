@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ShopController\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Category;
 use App\Repositories\Admin\CategoryRepository;
 use Illuminate\Http\Request;
 use MetaTag;
@@ -38,7 +39,16 @@ class CategoryController extends AdminBaseController
      */
     public function create()
     {
-        //
+        $category = new Category();
+        $combineCategory = $this->categoryRepository->getCombineCategories();
+        $base_categories = $this->categoryRepository->getBaseCategories();
+        MetaTag::setTags(['title' => 'Create category']);
+
+        return view('shop.admin.category.create', [
+            'categories' => $base_categories,
+            'delimiter' => '-',
+            'item' => $category,
+        ]);
     }
 
     /**

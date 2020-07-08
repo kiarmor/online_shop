@@ -77,4 +77,30 @@ class CategoryRepository extends CoreRepository
 
         return $delete;
     }
+
+    public function getCombineCategories()
+    {
+        $columns = implode(',', [
+            'id',
+            'parent_id',
+            'title',
+            'CONCAT (id, ". ", title) AS combo_title',
+        ]);
+
+        $result = $this->startConditions()
+            ->selectRaw($columns)
+            ->toBase()
+            ->get();
+
+        return $result;
+    }
+
+    public function getBaseCategories()
+    {
+        $cat = Category::with('children')
+        ->where('parent_id', '0')
+        ->get();
+
+        return $cat;
+    }
 }
