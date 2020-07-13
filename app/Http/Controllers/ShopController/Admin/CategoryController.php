@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ShopController\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ShopCategoryUpdateRequest;
 use App\Models\Admin\Category;
 use App\Repositories\Admin\CategoryRepository;
 use Illuminate\Http\Request;
@@ -57,7 +58,7 @@ class CategoryController extends AdminBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ShopCategoryUpdateRequest $request)
     {
         //
     }
