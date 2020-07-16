@@ -103,4 +103,23 @@ class CategoryRepository extends CoreRepository
 
         return $cat;
     }
+
+    public function checkUniqueName($name, $parent_id)
+    {
+        $name = $this->startConditions()
+            ->where('title', '=', $name)
+            ->where('parent_id', '=', $parent_id)
+            ->exists();
+
+        return $name;
+
+    }
+
+    public function saveToDataBase($request)
+    {
+        $item = new Category();
+        $item->fill($request)->save();
+
+        return $item;
+    }
 }

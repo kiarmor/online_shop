@@ -24,7 +24,7 @@ class ShopCategoryUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|min:5|max:200',
+            'title' => 'required|min:2|max:200',
             'slug' => 'max:200',
             'description' => 'min:5|string|max:500',
             'parent_id' => 'integer',

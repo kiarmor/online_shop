@@ -60,7 +60,28 @@ class CategoryController extends AdminBaseController
      */
     public function store(ShopCategoryUpdateRequest $request)
     {
-        //
+        $name = $this->categoryRepository->checkUniqueName($request->title, $request->parent_id);
+
+        if ($name){
+            return back()
+                ->withErrors(['msg' => "This {$request->title} already exist"])
+                ->withInput();
+        }
+
+        $save = $this->categoryRepository->saveToDataBase($request->input());
+
+        if ($save){
+            return redirect()
+                ->route('shop.admin.categories.create', [$save->id])
+                ->with(['success' => 'Successfully saved']);
+        }
+        else {
+            return redirect()
+                ->back()
+                ->withErrors(['msg' => 'Error'])
+                ->withInput();
+        }
+
     }
 
     /**
@@ -80,9 +101,21 @@ class CategoryController extends AdminBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id, CategoryRepository $categoryRepository)
     {
-        //
+        $item = $this->categoryRepository->getId($id);
+        if (empty($item)){
+            return abort(404);
+        }
+        $base_categories = $this->categoryRepository->getBaseCategories();
+        MetaTag::setTags(['title' => 'Edit category']);
+
+        return view('shop.admin.category.edit', [
+            'categories' => $base_categories,
+            'delimiter' => '-',
+            'item' => $item,
+        ]);
+
     }
 
     /**
@@ -92,9 +125,30 @@ class CategoryController extends AdminBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ShopCategoryUpdateRequest $request, $id)
     {
-        //
+        $item = $this->categoryRepository->getId($id);
+        if (empty($item)){
+            return abort(404);
+        }
+
+        $data = $request->all();
+        $save = $item->update($data);
+
+        if ($save){
+            return redirect()
+                ->route('shop.admin.categories.create', [$save->id])
+                ->with(['success' => 'Successfully saved']);
+        }
+        else {
+            return redirect()
+                ->back()
+                ->withErrors(['msg' => 'Error'])
+                ->withInput();
+        }
+
+
+
     }
 
     /**
