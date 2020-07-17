@@ -137,7 +137,7 @@ class CategoryController extends AdminBaseController
 
         if ($save){
             return redirect()
-                ->route('shop.admin.categories.create', [$save->id])
+                ->route('shop.admin.categories.create', [$item->id])
                 ->with(['success' => 'Successfully saved']);
         }
         else {
