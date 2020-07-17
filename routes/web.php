@@ -35,7 +35,6 @@ Route::group(['middleware' => ['status', 'auth']], function () {
     Route::group($groupData, function (){
         Route::resource('index', 'MainAdminController')
             ->names('shop.admin.index');
-
         Route::resource('orders', 'OrderController')
             ->names('shop.admin.orders');
         Route::get('/orders/change/{id}', 'OrderController@change')
@@ -44,6 +43,12 @@ Route::group(['middleware' => ['status', 'auth']], function () {
             ->name('shop.admin.orders.save');
         Route::get('/orders/forcedestroy/{id}', 'OrderController@forcedestroy')
             ->name('shop.admin.orders.forcedestroy');
+
+        Route::get('categories/mydel', 'CategoryController@mydel')
+            ->name('shop.admin.categories.mydel');
+        Route::resource('categories', 'CategoryController')
+            ->names('shop.admin.categories');
+
     });
 
 });
