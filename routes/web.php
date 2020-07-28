@@ -49,6 +49,9 @@ Route::group(['middleware' => ['status', 'auth']], function () {
         Route::resource('categories', 'CategoryController')
             ->names('shop.admin.categories');
 
+        Route::resource('users', 'UserController')
+            ->names('shop.admin.users');
+
     });
 
 });
