@@ -36,4 +36,38 @@ class UserRepository extends CoreRepository
 
         return $users;
     }
+
+    public function getAllRoles()
+    {
+        return DB::table('roles')->get();
+    }
+
+    public function getUserRole($user_id)
+    {
+        //TODO: review DB query
+        $role = DB::table('user_roles')
+            ->join('roles', 'id', '=', 'user_roles.role_id')
+            ->where('user_id', $user_id)
+            ->select('name')
+            ->get();
+
+        return $role;
+    }
+
+    public function getAllUserOrders($user_id, $perpage)
+    {
+        $orders = DB::table('users')
+            ->join('orders', 'orders.user_id', '=', 'users.id')
+            ->join('order_products', 'order_products.order_id', '=', 'orders.id')
+            ->select('orders.id', 'orders.user_id', 'orders.status', 'orders.created_at', 'orders.updated_at',
+                'orders.currency', DB::raw('ROUND(SUM(order_products.price),2)AS sum'))
+            ->where('user_id', $user_id)
+            ->groupBy('orders.id')
+            ->orderBy('orders.status')
+            ->orderBy('orders.id')
+            ->paginate($perpage);
+
+        return $orders;
+    }
+
 }

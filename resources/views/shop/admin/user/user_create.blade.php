@@ -28,13 +28,13 @@
 
                             <div class="form-group">
                                 <label for="">Password</label>
-                                <input type="text" class="form-control" name="password" value="@if(old('password')){{old('password')}} @else @endif" required>
+                                <input type="password" class="form-control" name="password" value="" required>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="">Confirm password</label>
-                                <input type="text" class="form-control" name="confirm_password" value="@if(old('confirm_password')){{old('confirm_password')}} @else @endif" required>
+                                <input type="password" class="form-control" name="confirm_password" value="" required>
                                 <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                             </div>
 
@@ -45,7 +45,12 @@
                             </div>
 
                             <div class="form-group has-feedback">
-                                <p>TODO: need to select role or remove from here and save default user</p>
+                                <label for="role">Role</label>
+                                <select name="role" id="role" class="form-control">
+                                    @foreach($roles as $role)
+                                        <option value="{{$role->id}}">{{$role->name}}</option>
+                                    @endforeach    
+                                </select>
                             </div>
                         </div>
 

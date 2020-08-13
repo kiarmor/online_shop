@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\ShopController\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminUserOrderRequest;
+use App\Models\UserRole;
 use App\Repositories\Admin\MainAdminRepository;
 use App\Repositories\Admin\UserRepository;
+use App\User;
 use Illuminate\Http\Request;
 use MetaTag;
 
@@ -39,7 +42,8 @@ class UserController extends AdminBaseController
     public function create()
     {
         MetaTag::setTags(['title' => 'Add user']);
-        return view('shop.admin.user.user_create');
+        $roles = $this->user_repository->getAllRoles();
+        return view('shop.admin.user.user_create', compact('roles'));
     }
 
     /**
@@ -48,9 +52,33 @@ class UserController extends AdminBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdminUserOrderRequest $request)
     {
-        //
+        $user = User::create([
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => bcrypt($request['password'])
+        ]);
+
+        if (!$user){
+            return back()
+                ->withErrors('Creating error')
+                ->withInput();
+        }else {
+            $role = UserRole::create([
+                'user_id' => $user->id,
+                'role_id' => $request['role'],
+            ]);
+        }
+        if (!$role){
+            return back()
+                ->withErrors('Creating role error')
+                ->withInput();
+        } else {
+            return redirect(route('shop.admin.users.index'))
+                ->with(['success' => 'User created']);
+        }
+
     }
 
     /**
@@ -72,7 +100,17 @@ class UserController extends AdminBaseController
      */
     public function edit($id)
     {
-        //
+        $perpage = 5;
+        /*$item = $this->user_repository->getId($id);
+        if (!$item){
+            abort(404);
+        }*/
+        $orders = $this->user_repository->getAllUserOrders($id, $perpage);
+        MetaTag::setTags(['title' => 'Edit user']);
+        $role = $this->user_repository->getUserRole($id);
+        dd($role);
+        return view('shop.admin.user.user_edit', compact('orders', 'role'));
+
     }
 
     /**
