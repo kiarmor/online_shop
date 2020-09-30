@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\ShopController\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\AdminUserOrderRequest;
+use App\Http\Requests\AdminUserEditRequest;
 use App\Models\UserRole;
 use App\Repositories\Admin\MainAdminRepository;
 use App\Repositories\Admin\UserRepository;
@@ -49,10 +49,10 @@ class UserController extends AdminBaseController
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param AdminUserEditRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(AdminUserOrderRequest $request)
+    public function store(AdminUserEditRequest $request)
     {
         $user = User::create([
             'name' => $request['name'],
@@ -84,8 +84,8 @@ class UserController extends AdminBaseController
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return void
      */
     public function show($id)
     {
@@ -101,28 +101,38 @@ class UserController extends AdminBaseController
     public function edit($id)
     {
         $perpage = 5;
-        /*$item = $this->user_repository->getId($id);
-        if (!$item){
+        $user= $this->user_repository->getUser($id);
+        if (!$user){
             abort(404);
-        }*/
+        }
         $orders = $this->user_repository->getAllUserOrders($id, $perpage);
         MetaTag::setTags(['title' => 'Edit user']);
         $role = $this->user_repository->getUserRole($id);
-        dd($role);
-        return view('shop.admin.user.user_edit', compact('orders', 'role'));
+
+        return view('shop.admin.user.user_edit', compact('orders', 'role', 'user'));
 
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param AdminUserEditRequest $request
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminUserEditRequest $request, $id)
     {
-        //
+        $user = $this->user_repository->getUser($id);
+        $updating = $this->user_repository->updateUser($user, $request);
+
+        if (!$updating){
+            return back()
+                ->withErrors('Changes NOT saved')
+                ->withInput();
+        } else {
+            return redirect(route('shop.admin.users.index'))
+                ->with(['success' => 'User updated']);
+        }
     }
 
     /**
@@ -133,6 +143,16 @@ class UserController extends AdminBaseController
      */
     public function destroy($id)
     {
-        //
+        $user = $this->user_repository->getUser($id);
+        $deleting = $user->forceDelete();
+
+        if (!$deleting){
+            return back()
+                ->withErrors('NOT deleted')
+                ->withInput();
+        } else {
+            return redirect(route('shop.admin.users.index'))
+                ->with(['success' => "User " . ucfirst($user->name) . " deleted"]);
+        }
     }
 }

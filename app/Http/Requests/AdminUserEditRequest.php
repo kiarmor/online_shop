@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminUserOrderRequest extends FormRequest
+class AdminUserEditRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,8 +33,8 @@ class AdminUserOrderRequest extends FormRequest
                 'max:100',
                 \Illuminate\Validation\Rule::unique('users')->ignore($id)
             ],
-            'password' => 'min:6|required',
-            'password_confirmation' => 'min:6|same:password'
+            'password' => 'min:6|nullable|confirmed',
+            'password_confirmation' => 'same:password'
 
         ];
     }

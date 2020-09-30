@@ -9,9 +9,11 @@
 namespace App\Repositories\Admin;
 
 
+use App\Models\UserRole as UserRole;
 use App\Repositories\CoreRepository;
 use App\Models\Admin\AdminUser as Model;
 use Illuminate\Support\Facades\DB;
+use App\User as User;
 
 class UserRepository extends CoreRepository
 {
@@ -20,11 +22,18 @@ class UserRepository extends CoreRepository
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     protected function getModelClass()
     {
         return Model::class;
     }
 
+    /**
+     * @param $perpage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function getAllUsers($perpage)
     {
         $users = DB::table('users')
@@ -37,11 +46,30 @@ class UserRepository extends CoreRepository
         return $users;
     }
 
+    /**
+     * @param $user_id
+     * @return User[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model|null
+     */
+    public function getUser($user_id)
+    {
+        $users = User::all();
+        $user = $users->find($user_id);
+
+        return $user;
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
     public function getAllRoles()
     {
         return DB::table('roles')->get();
     }
 
+    /**
+     * @param $user_id
+     * @return \Illuminate\Support\Collection
+     */
     public function getUserRole($user_id)
     {
         //TODO: review DB query
@@ -54,6 +82,11 @@ class UserRepository extends CoreRepository
         return $role;
     }
 
+    /**
+     * @param $user_id
+     * @param $perpage
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
     public function getAllUserOrders($user_id, $perpage)
     {
         $orders = DB::table('users')
@@ -68,6 +101,25 @@ class UserRepository extends CoreRepository
             ->paginate($perpage);
 
         return $orders;
+    }
+
+    /**
+     * @param $user
+     * @param $request
+     * @return mixed
+     */
+    public function updateUser($user, $request)
+    {
+        $user->name = $request['name'];
+        $user->email = $request['email'];
+        $request['password'] == null ?: $user->password = bcrypt($request['password']);
+        $save = $user->save();
+
+        $role = DB::table('user_roles')
+            ->where('user_id', $request['id'])
+            ->update(['role_id' => $request['role']]);
+
+        return $save;
     }
 
 }
