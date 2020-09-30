@@ -33,7 +33,7 @@ class OrderController extends AdminBaseController
             $count_orders = MainAdminRepository::getCountOrders();
             $orders = $this->order_repository->getAllOrders(7);
 
-            return view('shop.admin.order.order', compact('count_orders', 'orders'));
+            return view('shop.admin.order.order_index', compact('count_orders', 'orders'));
         }
         catch (\Exception $e){
             return abort(404);
